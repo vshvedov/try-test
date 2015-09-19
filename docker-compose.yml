@@ -1,0 +1,21 @@
+nginx:
+  build: ./nginx
+  links:
+    - web:web
+  ports:
+    - 80:80
+
+db:
+  image: postgres
+  ports:
+    - "5432"
+
+web:
+  build: ./apiapp
+  command: unicorn -c config/unicorn.rb -p 3000
+  volumes:
+    - ./apiapp:/apiapp
+  ports:
+    - "127.0.0.1:3000:3000"
+  links:
+    - db
